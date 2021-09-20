@@ -1,4 +1,6 @@
-﻿using i18n.ViewModels;
+﻿using i18n.Commands;
+using i18n.ViewModels;
+using System;
 using System.Windows;
 
 namespace i18n
@@ -8,11 +10,27 @@ namespace i18n
     /// </summary>
     public partial class MainWindow : Window
     {
-        public MainWindow()
+        EmployeesMainViewModel vm;
+        App app;
+
+        public MainWindow(App app)
         {
             InitializeComponent();
+            vm = new EmployeesMainViewModel();
+            DataContext = vm;
 
-            DataContext = new MainViewModel();
+            this.app = app;
+
+            vm.RestartCommand = new DelegateCommand<string>(Restart);
+        }
+
+        private void Restart(string obj)
+        {
+            var result = MessageBox.Show("Pour appliquer les changements, il faut redémarrer l'application.", "Message", MessageBoxButton.OKCancel);
+            if (result == MessageBoxResult.OK)
+            {
+                app.Restart();
+            }
         }
     }
 }
